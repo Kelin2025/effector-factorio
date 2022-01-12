@@ -20,6 +20,7 @@ export const modelFactory = <T extends (...args: any[]) => any>(factory: T) => {
       const model = factory(...args) as ReturnType<typeof factory>;
       for (const unitKey in model) {
         const unit = model[unitKey];
+        // @ts-expect-error
         if (is.store(unit) && unit.defaultConfig.derived !== 1) {
           unit.reset(reset);
         }
