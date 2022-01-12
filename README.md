@@ -1,84 +1,147 @@
-# Effector History
+# Effector Factorio
 
-Utility library that implements undo/redo feature for you
+The simplest way to write re-usable features with React + Effector
 
-## Installation
+## Install
+
 ```bash
-npm install effector-history
+npm install effector-factorio
 ```
+
+## Why this?
+
+People became to obsessed with using react hooks, which results in components being littered with a lot of business logic.  
+And because of React runtime nature, writing logic inside components always leads to:
+
+- **Unreadable code.** Tons of `useMemo`, `useCallback` and hooks limitations make code way harder to read and support.
+- **Low performance.** A lot of memoization which anyway leads to extra re-renders.
+- **Problems with testing.** You could just write your logic, create its instance and just test it. Instead you have to render your component, click buttons and do other irrelevant stuff just to test your logic.
+- **Extra responsibility.** This one speaks for itself, components fastly get a lot of extra responsibility and break clean architecture.
+
+This approach allows you to extract all the logic from components, while still having opportunity to re-use components.
 
 ## Usage
-```ts
-import { createHistory } from 'effector-history'
 
-const right = createEvent()
-const up = createEvent()
+This library consists of just two functions: `modelFactory` and `modelView`.
+Let's make a simple sign up form.
 
-const $x = createStore(0)
-const $y = createStore(0)
+**Step 1. Create model factory.**
 
-$x.on(right, (x) => x+1)
+```tsx
+import { modelFactory } from 'effector-factorio';
+import { combine, sample, createStore, createEvent, Effect } from 'effector';
 
-$y.on(up, y => y+1)
+type FactoryOptions = {
+  register: Effect<{ name: string; password: string }, any>;
+};
 
-const history = createHistory({
-  source: {
-    x: $x,
-    y: $y
-  },
-  maxLength: 20
+const factory = modelFactory((options: FactoryOptions) => {
+  const loginChanged = createEvent<string>();
+  const passwordChanged = createEvent<string>();
+  const submitPressed = createEvent();
+
+  const $login = createStore('');
+  const $password = createStore('');
+
+  const $form = combine({ login: $login, password: $password });
+
+  const $disabled = options.register.pending;
+
+  $login.on(loginChanged, (prev, next) => next);
+  $password.on(passwordChanged, (prev, next) => next);
+
+  sample({
+    source: $form,
+    clock: submitPressed,
+    target: options.register,
+  });
+
+  return {
+    $login,
+    $password,
+    $disabled,
+    loginChanged,
+    passwordChanged,
+    submitPressed,
+  };
+});
+```
+
+**Step 2. Create a view.**
+
+```tsx
+import { useStore } from 'effector-react'
+import { modelView } from 'effector-factorio'
+
+const Form = modelView(factory, () => {
+  return (
+    <div className="flex flex-col gap-2">
+      <LoginField />
+      <PasswordField />
+      <RegisterButton />
+    </div>
 })
 
-combine([$x, $y]).watch(console.log)
+const LoginField = () => {
+  const model = factory.useModel()
+  const login = useStore(model.$login)
 
-up()     // [0, 1]
-up()     // [0, 2]
-right(); // [1, 2]
-up();    // [1, 3]
+  return <input
+    value={login}
+    placeholder="Login"
+    onChange={evt => model.loginChanged(evt.target.value)}
+  />
+}
 
-history.undo(); // [1, 2]
-history.undo(); // [0, 2]
-history.redo(); // [1, 2]
+const PasswordField = () => {
+  const model = factory.useModel()
+  const password = useStore(model.$password)
+
+  return <input
+    value={password}
+    placeholder="Password"
+    onChange={evt => model.passwordChanged(evt.target.value)}
+  />
+}
+
+const RegisterButton = () => {
+  const model = factory.useModel()
+  const disabled = useStore(model.$disabled)
+
+  return (
+    <button
+      disabled={disabled}
+      onClick={() => model.submitPressed}
+    >
+      Save
+    </button>
+  )
+}
 ```
 
-## Customization
+**Step 3. Export the whole thing**
 
-#### `clock` property
-Sometimes you need to add records only on a specific event.  
-For example, you have draggable blocks, and you want to push to history only whenever drag is ended.  
-For such cases you can use `clock` property:
-
-```ts
-createHistory({
-  source: { 
-    x: $x, 
-    y: $y 
-  },
-  // Only these events will trigger history
-  clock: [
-    dragEnded
-  ],
-  maxLength: 20
-})
-```
-Keep in mind that store updates **won't** push to history in this case, so it can cause data incosistency
-
-## API Reference
-```ts
-history.$history   // All history records
-history.$canUndo   // `true` if can undo, `false` otherwise
-history.$canRedo   // `true` if can redo, `false` otherwise
-history.$curIndex  // Index of currently active history index
-history.$curRecord // Current history record
-history.$length    // Amount of records in history (min. 1)
-
-history.undo()     // Undo
-history.redo()     // Redo
-history.clear()    // Clear history
-history.push(data) // Manually push something to history
+```tsx
+export const CreateUser = {
+  factory,
+  Form,
+};
 ```
 
-## TODO
-- [ ] Store clocks that caused history push
-- [ ] Suppport different shapes of `source` in `createHistory`
-- [ ] Support `createHistory` without `source`
+**Step 4. Use it wherever you want**
+
+```tsx
+import { CreateUser } from '@/features/create-user';
+
+const createUserModel = CreateUser.factory.createModel({
+  register: registerUserFx,
+});
+
+const Page = () => {
+  return <CreateUser.Form model={createUserModel} />;
+};
+```
+
+That's it!
+The benefit might be not that obvious on simple example, but I decided to keep it small in order to avoid frustration from huge irrelevant code.
+The key point is that if you correctly split your app into multiple layers, each segment will look small and clean, and you can easily compose all the stuff.
