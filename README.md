@@ -66,6 +66,8 @@ const factory = modelFactory((options: FactoryOptions) => {
   };
 });
 ```
+Here we created a factory, that creates returns model instance.  
+And, as an example of customization, we can also pass external `register` effect for each instance.
 
 **Step 2. Create a view.**
 
@@ -118,6 +120,7 @@ const RegisterButton = () => {
   )
 }
 ```
+Here, `modelView` wraps component into HOC that accepts `model` prop with the current modal instance and pass it through **React Context**.
 
 **Step 3. Export the whole thing**
 
@@ -141,6 +144,7 @@ const Page = () => {
   return <CreateUser.Form model={createUserModel} />;
 };
 ```
+And here, we created model instance and passed it as a prop to our Form component
 
 That's it!
 The benefit might be not that obvious on simple example, but I decided to keep it small in order to avoid frustration from huge irrelevant code.
