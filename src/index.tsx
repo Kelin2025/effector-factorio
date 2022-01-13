@@ -1,5 +1,5 @@
 import { createEvent, Event, is } from 'effector';
-import { createContext, FC, useContext } from 'react';
+import React, { createContext, FC, useContext } from 'react';
 
 export const modelFactory = <T extends (...args: any[]) => any>(factory: T) => {
   // @ts-expect-error
