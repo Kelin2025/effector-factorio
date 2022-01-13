@@ -17,6 +17,7 @@ And because of React runtime nature, writing logic inside components always lead
 - **Low performance.** A lot of memoization which anyway leads to extra re-renders.
 - **Problems with testing.** You could just write your logic, create its instance and just test it. Instead you have to render your component, click buttons and do other irrelevant stuff just to test your logic.
 - **Extra responsibility.** This one speaks for itself, components fastly get a lot of extra responsibility and break clean architecture.
+- **Structural incongrity.** View composition can have a different structure. Also, most of the logic gets used in several places. Also, with hooks - when the layout changes, you rewrite your logic as well.
 
 This approach allows you to extract all the logic from components, while still having opportunity to re-use components.
 
@@ -66,6 +67,7 @@ const factory = modelFactory((options: FactoryOptions) => {
   };
 });
 ```
+
 Here we created a factory, that creates returns model instance.  
 And, as an example of customization, we can also pass external `register` effect for each instance.
 
@@ -120,6 +122,7 @@ const RegisterButton = () => {
   )
 }
 ```
+
 Here, `modelView` wraps component into HOC that accepts `model` prop with the current modal instance and pass it through **React Context**.
 
 **Step 3. Export the whole thing**
@@ -144,6 +147,7 @@ const Page = () => {
   return <CreateUser.Form model={createUserModel} />;
 };
 ```
+
 And here, we created model instance and passed it as a prop to our Form component
 
 That's it!
