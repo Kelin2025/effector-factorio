@@ -17,7 +17,7 @@ And because of React runtime nature, writing logic inside components always lead
 - **Low performance.** A lot of memoization which anyway leads to extra re-renders.
 - **Problems with testing.** You could just write your logic, create its instance and just test it. Instead you have to render your component, click buttons and do other irrelevant stuff just to test your logic.
 - **Extra responsibility.** This one speaks for itself, components fastly get a lot of extra responsibility and break clean architecture.
-- **Structural incongrity.** View composition can have a different structure. Also, most of the logic gets used in several places. Also, with hooks - when the layout changes, you rewrite your logic as well.
+- **Structural incongrity.** View composition can be structurally different to logic composition. Also, most of the logic gets used in several places. Also, with hooks, when the layout changes, you rewrite your logic as well.
 
 However, when you extract logic from components, it usually means that it will be a singleton. So, if you wannt to re-use it, you can't.
 
