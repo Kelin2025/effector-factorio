@@ -19,7 +19,10 @@ And because of React runtime nature, writing logic inside components always lead
 - **Extra responsibility.** This one speaks for itself, components fastly get a lot of extra responsibility and break clean architecture.
 - **Structural incongrity.** View composition can have a different structure. Also, most of the logic gets used in several places. Also, with hooks - when the layout changes, you rewrite your logic as well.
 
-This approach allows you to extract all the logic from components, while still having opportunity to re-use components.
+However, when you extract logic from components, it usually means that it will be a singleton. So, if you wannt to re-use it, you can't.
+
+This library allows you to extract all the logic from components, while still having opportunity to re-use components.  
+It's based on factories and provides an API to make it in a unified way with less boilerplate.
 
 ## Usage
 
