@@ -20,7 +20,6 @@ export const modelFactory = <T extends (...args: any[]) => any>(factory: T) => {
       const model = factory(...args) as ReturnType<typeof factory>;
       for (const unitKey in model) {
         const unit = model[unitKey];
-        // @ts-expect-error
         if (is.store(unit) && unit.defaultConfig.derived !== 1) {
           unit.reset(reset);
         }
@@ -49,3 +48,7 @@ export const modelView = <
   // `as` is used for a better "Go To Definition"
   return Render as typeof View;
 };
+
+export type Model<Factory extends ReturnType<typeof modelFactory>> = ReturnType<
+  Factory['createModel']
+>;
