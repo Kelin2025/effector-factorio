@@ -156,3 +156,22 @@ And here, we created model instance and passed it as a prop to our Form componen
 That's it!
 The benefit might be not that obvious on simple example, but I decided to keep it small in order to avoid frustration from huge irrelevant code.
 The key point is that if you correctly split your app into multiple layers, each segment will look small and clean, and you can easily compose all the stuff.
+
+## Utilities
+
+#### `Model<Factory>` - utility type to extract model type from factory
+
+Usage:
+
+```tsx
+import { createFactory, Model } from 'effector-factorio';
+
+const fooFactory = createFactory(() => {
+  return {
+    foo: createStore(''),
+  };
+});
+
+type FooModel = Model<typeof fooFactory>;
+// { foo: Store<string> }
+```
