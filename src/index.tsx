@@ -1,4 +1,3 @@
-import { createEvent, Event, is } from 'effector';
 import React, { createContext, FC, useContext } from 'react';
 
 export const modelFactory = <T extends (...args: any[]) => any>(factory: T) => {
@@ -13,24 +12,15 @@ export const modelFactory = <T extends (...args: any[]) => any>(factory: T) => {
   };
 
   return {
-    createModel: (
-      ...args: Parameters<typeof factory>
-    ): ReturnType<typeof factory> & { reset: Event<void> } => {
-      const reset = createEvent();
-      const model = factory(...args) as ReturnType<typeof factory>;
-      for (const unitKey in model) {
-        const unit = model[unitKey];
-        // @ts-expect-error
-        if (is.store(unit) && unit.defaultConfig.derived !== 1) {
-          unit.reset(reset);
-        }
-      }
-      return { ...model, reset };
-    },
+    createModel: factory,
     useModel,
     Provider: ModelContext.Provider,
   };
 };
+
+export type Model<Factory extends ReturnType<typeof modelFactory>> = ReturnType<
+  Factory['createModel']
+>;
 
 export const modelView = <
   U extends {},
@@ -49,7 +39,3 @@ export const modelView = <
   // `as` is used for a better "Go To Definition"
   return Render as typeof View;
 };
-
-export type Model<Factory extends ReturnType<typeof modelFactory>> = ReturnType<
-  Factory['createModel']
->;
