@@ -1,0 +1,5 @@
+src/
+test/
+.babelrc
+.prettierrc
+jest.config.js
