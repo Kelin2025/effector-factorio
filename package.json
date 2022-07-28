@@ -2,6 +2,7 @@
   "version": "0.3.1",
   "license": "MIT",
   "main": "dist/index.js",
+  "module": "dist/esm/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -11,28 +12,29 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build"
+    "start": "tsup src/index.tsx --watch",
+    "test": "jest -i",
+    "test:watch": "jest --watch -i",
+    "build": "npm run test && tsup src/index.tsx --minify --dts --format esm,cjs --legacy-output",
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "effector": "^22",
-    "react": "^17.0.2"
+    "react": "^17 || ^18"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.16.7",
-    "@types/react": "^17.0.38",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@types/jest": "^28.1.6",
+    "@types/react": "^17 || ^18",
     "effector": "^22.1.2",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.3.1",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.3",
+    "ts-jest": "^28.0.1",
+    "tslib": "^2.4.0",
+    "tsup": "^6.2.0",
     "typescript": "^4.5.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
   },
   "prettier": {
     "printWidth": 80,
@@ -45,6 +47,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/kelin2025/effector-factorio"
-  },
-  "module": "dist/effector-factorio.esm.js"
+  }
 }
