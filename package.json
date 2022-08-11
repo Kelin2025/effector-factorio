@@ -1,7 +1,21 @@
 {
   "version": "0.3.1",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./solid": {
+      "import": "./dist/esm/solid.js",
+      "require": "./dist/cjs/solid.js",
+      "types": "./dist/solid.d.ts"
+    }
+  },
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -11,28 +25,36 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build"
+    "build": "rollup -c rollup.config.js",
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "effector": "^22",
-    "react": "^17.0.2"
+    "react": "^17.0.2",
+    "solid-js": "~1.4.8"
+  },
+  "peerDependenciesMeta": {
+    "solid-js": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@babel/core": "~7.18.10",
     "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "~7.18.6",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@types/babel__core": "~7.1.19",
     "@types/react": "^17.0.38",
+    "babel-preset-solid": "~1.4.8",
     "effector": "^22.1.2",
-    "tsdx": "^0.14.1",
+    "rollup": "^2.77.2",
+    "rollup-plugin-dts": "~4.2.2",
+    "rollup-plugin-esbuild": "~4.9.1",
+    "rollup-plugin-typescript2": "~0.32.1",
     "tslib": "^2.3.1",
     "typescript": "^4.5.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
   },
   "prettier": {
     "printWidth": 80,
@@ -45,6 +67,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/kelin2025/effector-factorio"
-  },
-  "module": "dist/effector-factorio.esm.js"
+  }
 }
