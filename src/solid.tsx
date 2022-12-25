@@ -1,6 +1,8 @@
 /* @jsxImportSource solid-js */
-import {useContext, createContext, Component} from "solid-js";
-import {Dynamic} from "solid-js/web";
+import { useContext, createContext, Component } from 'solid-js';
+import { Dynamic } from 'solid-js/web';
+import { removeNonUnit } from './utils/removeNonUnit';
+import { removeStorePrefix } from './utils/removeStorePrefix';
 
 /**
  * Creates model `factory`
@@ -17,6 +19,11 @@ export const modelFactory = <T extends (...args: any[]) => any>(creator: T) => {
     }
     return model;
   };
+  const unitShape = () => {
+    const model = useModel();
+    const modelUnits = removeNonUnit(model);
+    return removeStorePrefix(modelUnits);
+  };
 
   return {
     /** Function that returns new `model` instance */
@@ -25,12 +32,13 @@ export const modelFactory = <T extends (...args: any[]) => any>(creator: T) => {
     useModel,
     /** `Provider` to pass current `model` instance into */
     Provider: ModelContext.Provider,
+    '@@unitShape': unitShape,
   };
 };
 
 export type Model<Factory extends ReturnType<typeof modelFactory>> = ReturnType<
   Factory['createModel']
-  >;
+>;
 
 /**
  * HOC that wraps your `View` into model `Provider`. Also adds `model` prop that will be passed into `Provider`
