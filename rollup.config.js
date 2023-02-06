@@ -11,7 +11,9 @@ const extensions = [...DEFAULT_EXTENSIONS, '.ts', '.tsx'];
 
 function defaultPlugins(additionalPlugins = []) {
   return [
-    nodeResolve(),
+    nodeResolve({
+      extensions: ['.ts'],
+    }),
     commonjs(),
     process.env.NODE_ENV === 'production' && minify(),
     ...additionalPlugins
