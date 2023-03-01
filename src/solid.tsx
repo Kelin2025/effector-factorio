@@ -1,4 +1,6 @@
-import React, { createContext, FC, useContext } from 'react';
+/* @jsxImportSource solid-js */
+import { useContext, createContext, Component } from 'solid-js';
+import { Dynamic } from 'solid-js/web';
 import { removeNonUnit } from './utils/removeNonUnit';
 import { removeStorePrefix } from './utils/removeStorePrefix';
 
@@ -49,12 +51,12 @@ export const modelView = <
   T extends ReturnType<typeof modelFactory>
 >(
   factory: T,
-  View: FC<U & { model: ReturnType<T['createModel']> }>
+  View: Component<U & { model: ReturnType<T['createModel']> }>
 ) => {
   const Render = (props: Parameters<typeof View>[0]) => {
     return (
       <factory.Provider value={props.model}>
-        <View {...props} />
+        <Dynamic component={View} {...props} />
       </factory.Provider>
     );
   };

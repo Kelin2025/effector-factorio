@@ -39,7 +39,7 @@ type FactoryOptions = {
   registerFx: Effect<{ name: string; password: string }, any>;
 };
 
-const factory = modelFactory((options: FactoryOptions) => {
+export const factory = modelFactory((options: FactoryOptions) => {
   const loginChanged = createEvent<string>();
   const passwordChanged = createEvent<string>();
   const submitPressed = createEvent();
@@ -79,6 +79,8 @@ And, as an example of customization, we can also pass external `registerFx` effe
 ```tsx
 import { useStore } from 'effector-react'
 import { modelView } from 'effector-factorio'
+
+import { factory } from './factory' // from step 1
 
 const Form = modelView(factory, () => {
   return (

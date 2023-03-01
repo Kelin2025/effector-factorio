@@ -1,8 +1,21 @@
 {
   "version": "1.0.0",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./solid": {
+      "import": "./dist/esm/solid.js",
+      "require": "./dist/cjs/solid.js",
+      "types": "./dist/solid.d.ts"
+    }
+  },
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -12,29 +25,43 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsup src/index.tsx --watch",
-    "test": "jest -i",
-    "test:watch": "jest --watch -i",
-    "build": "npm run test && tsup src/index.tsx --minify --dts --format esm,cjs --legacy-output",
+    "build": "rollup -c rollup.config.js",
     "prepare": "npm run build"
   },
   "peerDependencies": {
     "effector": "^22",
-    "react": "^17 || ^18"
+    "react": "^17 || ^18",
+    "solid-js": "~1.4.8"
+  },
+  "peerDependenciesMeta": {
+    "solid-js": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@babel/core": "~7.18.10",
     "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "~7.18.6",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
+    "@types/babel__core": "~7.1.19",
     "@types/jest": "^28.1.6",
     "@types/react": "^17 || ^18",
+    "babel-preset-solid": "~1.4.8",
     "effector": "^22.1.2",
-    "jest": "^28.1.0",
     "jest-environment-jsdom": "^28.1.3",
+    "jest": "^28.1.0",
+    "rollup-plugin-dts": "~4.2.2",
+    "rollup-plugin-esbuild": "~4.9.1",
+    "rollup-plugin-typescript2": "~0.32.1",
+    "rollup": "^2.77.2",
     "ts-jest": "^28.0.1",
     "tslib": "^2.4.0",
     "tsup": "^6.2.0",
-    "typescript": "^4.5.4"
+    "typescript": "^4.9.4"
   },
   "prettier": {
     "printWidth": 80,
