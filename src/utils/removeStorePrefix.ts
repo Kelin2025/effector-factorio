@@ -8,7 +8,7 @@ type UnprefixedKey<Original> = Original extends `$${infer Unprefixed}`
 
 type PrefixedKey<Key extends string> = `$${Key}`;
 
-type Unprefixed<T extends Shape> = {
+export type Unprefixed<T extends Shape> = {
   [key in UnprefixedKey<keyof T>]: T extends { [inner in key]: unknown }
     ? T[key]
     : key extends string

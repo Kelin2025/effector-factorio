@@ -1,5 +1,6 @@
 /* @jsxImportSource solid-js */
-import { useContext, createContext, Component } from 'solid-js';
+import type { Component } from 'solid-js';
+import { createContext, useContext } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { removeNonUnit } from './utils/removeNonUnit';
 import { removeStorePrefix } from './utils/removeStorePrefix';
@@ -10,8 +11,7 @@ import { removeStorePrefix } from './utils/removeStorePrefix';
  * @returns Factory with `createModel` method, `useModel` hook and model `Provider`
  */
 export const modelFactory = <T extends (...args: any[]) => any>(creator: T) => {
-  // @ts-expect-error
-  const ModelContext = createContext<ReturnType<typeof creator>>(null);
+  const ModelContext = createContext<ReturnType<typeof creator> | null>(null);
   const useModel = () => {
     const model = useContext(ModelContext);
     if (!model) {
