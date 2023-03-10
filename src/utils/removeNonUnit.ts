@@ -3,7 +3,7 @@ import type { Unit } from 'effector';
 
 type Shape = { [key: string]: unknown };
 
-type OnlyUnits<T> = Pick<
+export type OnlyUnits<T> = Pick<
   T,
   { [Key in keyof T]-?: T[Key] extends Unit<unknown> ? Key : never }[keyof T]
 >;
