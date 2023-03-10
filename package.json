@@ -30,7 +30,7 @@
   },
   "peerDependencies": {
     "effector": "^22",
-    "react": "^17 || ^18",
+    "react": ">=16.14.0",
     "solid-js": "~1.4.8"
   },
   "peerDependenciesMeta": {
