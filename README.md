@@ -36,7 +36,7 @@ import { modelFactory } from 'effector-factorio';
 import { combine, sample, createStore, createEvent, Effect } from 'effector';
 
 type FactoryOptions = {
-  registerFx: Effect<{ name: string; password: string }, any>;
+  registerFx: Effect<{ login: string; password: string }, any>;
 };
 
 export const factory = modelFactory((options: FactoryOptions) => {
